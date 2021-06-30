@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -10,12 +11,13 @@ class ProductController extends Controller
     public function __construct(
         private Product $products
     ){}
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): string
     {
         $products = $this->products->all();
         return view('index')->with('products',$products);
@@ -26,9 +28,10 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): string
     {
-        return view('form');
+        $categories = Category::all();
+        return view('form')->with('categories',$categories);
     }
 
     /**
@@ -37,7 +40,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): string
     {
         if($this->products->create($request->except('csrf_token')))
             return redirect('/');
@@ -47,54 +50,51 @@ class ProductController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\Product  $product
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id): string
     {
-        $product = $this->products->find($id);
-        return view('index')->with('products',$product);
+        $product = $this->products->findOrFail($id);
+        return view('product')->with('product',$product);
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Product  $product
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): string
     {
-       $product = $this->products->find($id);
-       return view('edit')->with('product', $product);
+       $product = $this->products->findOrFail($id);
+       $categories = Category::all();
+       return view('edit')->with('product', $product)->with('categories',$categories);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, int $id): string
     {
         $product = $this->products->find($id);
         $product->name = $request->name;
         $product->price = $request->price;
         $product->category_id = $request->category_id;
         if($product->save())
-            redirect('/');
+           return redirect('/');
         
         return back()->with('error','error on update product');
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Product  $product
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id): string
     {
         if($this->products->destroy($id))
             return redirect()->route('index');

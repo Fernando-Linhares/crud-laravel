@@ -1,13 +1,21 @@
 @extends('layout.app')
 
 @section('content')
-    <div class="container">
-        <div  class="card card-sm card-border">
-            <form class="form-group" action="{{route('store')}}">
+    <div style="height: 30%; width: 45%; padding-top: 10%;" class="container">
+        <div  class="card card-border w-100" style="padding: 20px;">
+            <form class="form-group" method="post" action="{{route('store')}}">
                 @csrf
                 <input class="form-control" type="text" name="name">
+                <br>
                 <input class="form-control" type="text" name="price">
-                <input class="btn btn-primary" type="submit" name="name">
+                <br>
+                <select name="category_id" >
+                    @foreach($categories as $category)
+                    <option value="{{$category->id}}">{{$category->name}}</option>
+                    @endforeach
+                </select>
+                <br>
+                <input class="btn btn-primary" type="submit" value="enviar">
             </form>
         </div>
     </div>

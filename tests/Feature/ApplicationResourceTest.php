@@ -73,7 +73,7 @@ class ApplicationResourceTest extends TestCase
     }
 
     /**
-     * @test
+     * 
      */
     public function must_delete_data_by_id(): void
     {

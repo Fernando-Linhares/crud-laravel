@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('name')    
+@section('content')    
 <div><a class="btn btn-success" href="{{route('create')}}">add</a></div>
     <div class="container">
         <table class="table table-hover">
